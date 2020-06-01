@@ -3,15 +3,15 @@ import React from 'react'
 import StepCardStyled from './styled/StepCardStyled'
 import StepCardControlPanel from './StepCardControlPanel'
 
-const StepCard = ({ item, deleteItem }) => {
+const StepCard = ({ item, deleteItem, changeItem }) => {
     function handleClick(event) {
         event.preventDefault()
         if (event.target.classList.contains('delete-btn')) {
             deleteItem(item.id)
         }
 
-        if (event.target.classList.contains('edit-btn')) {
-            deleteItem(item.id)
+        if (event.target.classList.contains('create-btn')) {
+            changeItem(item.id)
         }
     }
 

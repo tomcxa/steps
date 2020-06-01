@@ -3,7 +3,7 @@ import React from 'react'
 import StepsStyled from './styled/StepsStyled'
 import StepCard from './StepCard'
 
-const StepsContainer = ({items, deleteItem}) => {
+const StepsContainer = ({items, deleteItem, changeItem}) => {
     return (
         <StepsStyled>
             <header>
@@ -14,7 +14,7 @@ const StepsContainer = ({items, deleteItem}) => {
             <div className="steps-wrapper">
                 {   
                     items.length
-                    ? items.map(item => <StepCard key={item.id} item={item} deleteItem={deleteItem} />)
+                    ? items.map(item => <StepCard key={item.id} item={item} changeItem={changeItem} deleteItem={deleteItem} />)
                     : 'Вы еще не начали шагать'
                 }
             </div>

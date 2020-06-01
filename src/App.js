@@ -1,26 +1,50 @@
 import React, { useState } from 'react';
 import moment from 'moment'
+import { nanoid } from 'nanoid'
 import AppContainerStyled from './components/styled/AppContainerStyled'
 import AddStepForm from './components/AddStepForm';
 import StepsContainer from './components/StepsContainer';
 
+function dateValidation(date) {
+    const reg = /^\s*(3[01]|[12][0-9]|0[1-9])\.(1[012]|0[1-9])\.(\d{2})\s*$/g
+    return reg.test(date)
+}
+
+function passedKmValidation(passedKm) {
+    return passedKm > 0
+}
+
 function App() {
+    let isChanging = false;
+    const defaultForm = {
+        date: { value: '', isValid: true },
+        passedKm: { value: '', isValid: true },
+    }
+
+    const [changing, setChanging] = useState(isChanging)
+
     const [items, setItem] = useState([{
-        date: {value: "22.02.22", isValid: true},
-        passedKm: {value: '14.5', isValid: true},
+        date: { value: "22.02.22", isValid: true },
+        passedKm: { value: '14.5', isValid: true },
         id: 12345
     }])
 
+    const [form, setForm] = useState(defaultForm)
+
     function addItem(item) {
+        console.log('add start')
         const index = items.findIndex((o) => item.date.value === o.date.value)
-        // console.log(moment('22.12.22', 'DD.MM.YY'))
         if (index !== -1) {
-            setItem(prevItems => prevItems.map((el) => {
-                if (el.date.value === item.date.value) {
-                    el.passedKm.value = +item.passedKm.value + +el.passedKm.value
-                }
-                return el
-            }))
+            console.log('add if check')
+            setItem(prevItems => {
+                console.log('setItem')
+                return prevItems.map((el) => {
+                    if (el.date.value === item.date.value) {
+                        el.passedKm.value = +item.passedKm.value + +el.passedKm.value
+                    }
+                    return el
+                })
+            })
             return
         }
         setItem(prevItems => [...prevItems, item]
@@ -32,14 +56,65 @@ function App() {
         )
     }
 
+    function changeItem(newItem) {
+        setItem(prevItems => prevItems.map((item) => {
+            if (item.id === newItem.id) {
+                item = newItem
+            }
+            return item;
+        }))
+        setChanging(false)
+    }
+
     function deleteItem(id) {
         setItem(prevItems => prevItems.filter(item => item.id !== id))
     }
 
+    function fillFormInput(id) {
+        const item = items.filter(el => el.id === id).pop()
+        setForm(item)
+        setChanging(true)
+    }
+
+    function setInvalidInput(name, event) {
+        event.target.elements[name].focus()
+        setForm((prevForm) => ({ ...prevForm, [name]: { value: '', isValid: false } }))
+    }
+
+    function onSubmit(event) {
+        if (!dateValidation(form.date.value)) {
+            setInvalidInput('date', event)
+            return
+        }
+        if (!passedKmValidation(form.passedKm.value)) {
+            setInvalidInput('passedKm', event)
+            return
+        }
+
+        if (!changing) {
+            addItem(form)
+        } else {
+            changeItem(form)
+        }
+
+        setForm(defaultForm)
+    }
+
+    function onChange({ target }) {
+        const { name, value } = target;
+
+        setForm(prevForm => ({
+            ...prevForm,
+            [name]: { value: value.trim(), isValid: true },
+            id: changing ? prevForm.id : nanoid()
+        }));
+    }
+
+
     return (
         <AppContainerStyled className="App">
-            <AddStepForm addItem={addItem} />
-            <StepsContainer items={items} deleteItem={deleteItem} />
+            <AddStepForm form={form} submit={onSubmit} change={onChange} />
+            <StepsContainer items={items} changeItem={fillFormInput} deleteItem={deleteItem} />
         </AppContainerStyled>
     );
 }
