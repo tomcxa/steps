@@ -12,6 +12,9 @@ const FormStyled = styled.div`
 
     & input {
         margin-right: 4px;
+        &.invalid {
+            border-color: red;
+        }
     }
 
     & button {

@@ -18,8 +18,8 @@ const StepCard = ({ item, deleteItem }) => {
     return (
         <StepCardStyled>
             <div className="step-card_info">
-                <span>{item.date}</span>
-                <span>{item.passedKm}</span>
+                <span>{item.date.value}</span>
+                <span>{item.passedKm.value}</span>
             </div>
             <StepCardControlPanel onClick={handleClick} />
         </StepCardStyled>
