@@ -22,7 +22,6 @@ const AddStepForm = ({ addItem }) => {
 
     function handleSubmit(event) {
         event.preventDefault()
-        console.log(event.target.elements['date'])
         if (!dateValidation(form.date.value)) {
             event.target.elements['date'].focus()
             setForm((prevForm) => ({ ...prevForm, date: { value: '', isValid: false } }))
