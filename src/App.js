@@ -36,15 +36,14 @@ function App() {
         const index = items.findIndex((o) => item.date.value === o.date.value)
         if (index !== -1) {
             console.log('add if check')
-            setItem(prevItems => {
-                console.log('setItem')
-                return prevItems.map((el) => {
-                    if (el.date.value === item.date.value) {
-                        el.passedKm.value = +item.passedKm.value + +el.passedKm.value
-                    }
-                    return el
-                })
+            const newItems = items.map((el) => {
+                if (el.date.value === item.date.value) {
+                    el.passedKm.value = (+item.passedKm.value) + (+el.passedKm.value)
+                }
+                return el
             })
+
+            setItem([...newItems])
             return
         }
         setItem(prevItems => [...prevItems, item]
